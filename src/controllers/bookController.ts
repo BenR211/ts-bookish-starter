@@ -12,11 +12,14 @@ class BookController {
 
     getBook(req: Request, res: Response) {
         // TODO: implement functionality
-        runQuery("select * from books");
-        return res.status(500).json({
-            error: 'server_error',
-            error_description: 'Endpoint not implemented yet.',
-        });
+        runQuery("select * from books")
+        .then((allBooks) => {
+            res.json(allBooks)
+        })
+        .catch((err) => {
+            res.send("your query is broken");
+        })
+
     }
 
     createBook(req: Request, res: Response) {

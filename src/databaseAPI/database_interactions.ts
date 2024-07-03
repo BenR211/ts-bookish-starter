@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { bookElem, returnedBooks } from "../bookInterfaces/books";
 
 export const server_conf = {
@@ -17,19 +18,23 @@ export const server_conf = {
   }
 
 
-export function runQuery(myQuery : string){
+export function runQuery(myQuery : string) : Promise<returnedBooks> {
     console.log("yes i am runninh");
     const Request = require('tedious').Request;
     const Connection = require('tedious').Connection;
     const connection = new Connection(server_conf);
-    connection.on('connect', (err) => {
-      if (err) {
-        console.log('Connection Failed');
-        throw err;
-      }
-      executeStatement();
-    });
     connection.connect();
+    return new Promise ((resolve, reject ) => {
+        connection.on('connect', (err) => {
+            if (err) {
+              console.log('Connection Failed');
+              reject(err);
+            }
+            resolve (executeStatement());
+          });
+        
+    })
+    
     function executeStatement() : Promise<returnedBooks> {
       const request = new Request(myQuery, (err, rowCount) => {
         if (err) {
