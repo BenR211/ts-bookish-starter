@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-
+import { runQuery} from '../databaseAPI/database_interactions'
 class BookController {
     router: Router;
 
@@ -12,6 +12,7 @@ class BookController {
 
     getBook(req: Request, res: Response) {
         // TODO: implement functionality
+        runQuery("select * from books");
         return res.status(500).json({
             error: 'server_error',
             error_description: 'Endpoint not implemented yet.',
