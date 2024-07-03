@@ -1,3 +1,5 @@
+import { bookElem, returnedBooks } from "../bookInterfaces/books";
+
 export const server_conf = {
     "server": "LLAMA",
     "authentication": {
@@ -28,7 +30,7 @@ export function runQuery(myQuery : string){
       executeStatement();
     });
     connection.connect();
-    function executeStatement() {
+    function executeStatement() : Promise<returnedBooks> {
       const request = new Request(myQuery, (err, rowCount) => {
         if (err) {
           throw err;
@@ -36,17 +38,52 @@ export function runQuery(myQuery : string){
         console.log('DONE!');
         connection.close();
       });
+
+      const allBooks : returnedBooks = {books : []}
       // Emits a 'DoneInProc' event when completed.
-      request.on('row', (columns) => {
-        columns.forEach((column) => {
-          if (column.value === null) {
-            console.log('NULL');
-          } else {
-            console.log(column.value);
-          }
-        });
-      });
-      // In SQL Server 2000 you may need: connection.execSqlBatch(request);
       connection.execSql(request);
+      
+      
+      return new Promise ((resolve, reject ) => {
+        request.on('row', (columns) => {
+            const myBook : bookElem = {bookName : "", authName : "", ISNB : ""}
+            columns.forEach((column) => {
+              if (column.value === null) {
+                console.log('NULL');
+              } 
+              
+              else {
+                
+                if (column.metadata.colName === 'bookName'){
+                    myBook.bookName = column.value
+                }
+                if (column.metadata.colName === 'authorName'){
+                    myBook.authName = column.value
+                }
+                if (column.metadata.colName === 'ISBN'){
+                    myBook.ISNB = column.value
+                }
+              }
+            });
+            //console.log(myBook)
+            allBooks.books.push(myBook)
+            //myBook = {bookName : "", authName : "", ISNB : ""}
+          });
+          // In SQL Server 2000 you may need: connection.execSqlBatch(request);
+          
+          
+          
+          console.log(allBooks.books)
+          request.on('doneInProc', () => {
+            console.log('All rows processed');
+            console.log(allBooks.books);
+            resolve(allBooks)
+          });
+          
+          request.on('error', (err) => {
+            reject(err);
+          });
+        
+      })
     }    
 }
