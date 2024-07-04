@@ -29,3 +29,25 @@ export function defineBook () : any {
     return myBook
 }
 
+
+export function defineUser() : any {
+    const myUser : any = sequelize.define('users', {
+        userID : {
+            type : DataTypes.STRING,
+            primaryKey : true
+        },    
+        firstName : {
+            type : DataTypes.STRING
+        },
+        lastName : {
+            type : DataTypes.STRING
+        },
+        username : {
+            type : DataTypes.STRING
+        },
+        password : {
+            type : DataTypes.STRING
+        }
+
+    })
+}

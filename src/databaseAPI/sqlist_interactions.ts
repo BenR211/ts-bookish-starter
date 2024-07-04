@@ -62,7 +62,7 @@ export const sequelize = new Sequelize('bookish', 'Fred', 'EagleS814444!', {
 
         console.log("database auth is successful???")
         const bookUpload = Book.create(querySpecifics)
-        await bookUpload.save()
+        
         callback(null, "successful upload")
 
     }
