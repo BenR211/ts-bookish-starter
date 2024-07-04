@@ -1,7 +1,6 @@
 import { DataTypes, Model } from "sequelize";
-
 const Sequelize = require('sequelize');
-
+import { defineBook } from "./sqelize_helper";
 type CallbackFunction = (error: Error | null, result?: string) => void;
 interface returnedBook {
     ISBN : String
@@ -10,32 +9,18 @@ interface returnedBook {
     numberOfCopies : number
 }
 
-  export async function establish_connection(callback : CallbackFunction) {
 
-    const sequelize = new Sequelize('bookish', 'Fred', 'EagleS814444!', {
-        host: 'LLAMA',
-        dialect: 'mssql' /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */
-      });
+export const sequelize = new Sequelize('bookish', 'Fred', 'EagleS814444!', {
+    host: 'LLAMA',
+    dialect: 'mssql' /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */
+  });
 
 
+  export async function returnLibraryInFull(callback : CallbackFunction) {
     try{
         await sequelize.authenticate();
-        const Book = sequelize.define('books', {
-            ISBN :  {
-                type : DataTypes.STRING
-            },
-            authorName : {
-                type : DataTypes.STRING
-            },
-            bookName : {
-                type : DataTypes.STRING
-            },
-            numberOfCopies : {
-                type : DataTypes.INTEGER
-            }
-    
-        })
 
+        const Book = defineBook()
 
 
         console.log("successfull database connection");

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { runQuery} from '../databaseAPI/database_interactions'
-import { establish_connection } from '../databaseAPI/sqlist_interactions';
+import { returnLibraryInFull } from '../databaseAPI/sqlist_interactions';
 class BookController {
     router: Router;
 
@@ -14,7 +14,7 @@ class BookController {
     getBook(req: Request, res: Response) {
         // TODO: implement functionality
         
-        establish_connection((error, result) => {
+        returnLibraryInFull((error, result) => {
             if (error){
                 res.send("there was an error in the backend")
             }
