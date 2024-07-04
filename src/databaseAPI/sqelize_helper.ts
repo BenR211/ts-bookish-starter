@@ -4,9 +4,11 @@ import {sequelize} from './sqlist_interactions'
 
 
 export function defineBook () : any {
-    return sequelize.define('books', {
+    
+    const myBook : any  = sequelize.define('books', {
         ISBN :  {
-            type : DataTypes.STRING
+            type : DataTypes.STRING,
+            primaryKey: true
         },
         authorName : {
             type : DataTypes.STRING
@@ -17,6 +19,13 @@ export function defineBook () : any {
         numberOfCopies : {
             type : DataTypes.INTEGER
         }
-    })
+        
+        
+    } )
+
+
+
+    
+    return myBook
 }
 
