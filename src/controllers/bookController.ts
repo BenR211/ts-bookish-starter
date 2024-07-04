@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { runQuery} from '../databaseAPI/database_interactions'
+import { establish_connection } from '../databaseAPI/sqlist_interactions';
 class BookController {
     router: Router;
 
@@ -12,14 +13,24 @@ class BookController {
 
     getBook(req: Request, res: Response) {
         // TODO: implement functionality
-        runQuery("select * from books")
+        
+        establish_connection((error, result) => {
+            if (error){
+                res.send("there was an error in the backend")
+            }
+            else {
+                res.json(result)
+            }
+        });
+        
+        /*runQuery("select * from books")
         .then((allBooks) => {
             res.json(allBooks)
         })
         .catch((err) => {
             res.send("your query is broken");
         })
-
+        */
     }
 
     createBook(req: Request, res: Response) {
